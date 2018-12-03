@@ -14,6 +14,7 @@ func Dispath(db *gorm.DB) (app *iris.Application) {
 		userCtr := controllers.UserController()
 		userCtr.SetOrm(db)
 		users.Get("/", userCtr.GetAll)
+		users.Get("/{id: uint}", userCtr.GetUserById)
 	})
 	app.PartyFunc("/link", func(links router.Party) {
 		linkCtr := controllers.LinkController()

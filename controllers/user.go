@@ -23,6 +23,12 @@ func (ctr *UserCtr) GetAll(request iris.Context) {
 	request.JSON(ret)
 }
 
+func (ctr *UserCtr) GetUserById(request iris.Context) {
+	id := request.Params().Get("id")
+	info := userModel.GetUserById(id)
+	request.JSON(info)
+}
+
 func UserController() *UserCtr {
 	return new(UserCtr)
 }

@@ -15,15 +15,25 @@ type Users struct {
 	UserResource string `gorm:"column:userResource" json:"userResource"`
 }
 
+/**
+ * @Author: ruke
+ * @Date: 2018-12-03 16:30:36
+ * @Desc: 获取所有用户
+ */
 func (user *Users) GetAll() Users {
     users := Users{}
 	db.Find(&users)
 	return users
 }
 
-func (user *Users) GetUserById(id int) Users {
+/**
+ * @Author: ruke
+ * @Date: 2018-12-03 16:30:49
+ * @Desc: 根据ID获取用户信息
+ */
+func (user *Users) GetUserById(id string) Users {
 	users := Users{}
-	// db.First(&users, id)
+	db.First(&users, id)
 	return users
 }
 
