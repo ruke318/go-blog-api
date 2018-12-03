@@ -4,6 +4,7 @@ import (
 	// "fmt"
 	// "time"
 	"blog/models"
+	"blog/tools"
 	"github.com/kataras/iris"
 	"github.com/jinzhu/gorm"
 )
@@ -21,7 +22,8 @@ func (ctr *UserCtr) SetOrm(Db *gorm.DB) {
 
 func (ctr *UserCtr) GetAll(request iris.Context) {
 	ret := userModel.GetAll()
-	request.JSON(ret)
+	res := tools.Error(ret, "test", tools.UserNotFound)
+	request.JSON(res)
 }
 
 func (ctr *UserCtr) GetUserById(request iris.Context) {
