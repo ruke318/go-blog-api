@@ -10,9 +10,10 @@ type Users struct {
 	Name string `json:"name"`
 	Avatar string `json:"avatar"`
 	Openid string `json:"openid"`
-	AddTime time.Time `gorm:"column:addTime" json:"addTime"`
+	AddTime *time.Time `gorm:"column:addTime" json:"addTime"`
 	Wxopenid string `json:"wxopenid"`
-	UserResource string `gorm:"column:userResource" json:"userResource"`
+	UserResource string `gorm:"column:userResource;default:qq" json:"userResource"`
+	Url string `json:"url"`
 }
 
 /**
@@ -34,6 +35,13 @@ func (user *Users) GetAll() Users {
 func (user *Users) GetUserById(id string) Users {
 	users := Users{}
 	db.First(&users, id)
+	return users
+}
+
+func (user *Users) Create(users Users) Users {
+	t := time.Now().Local()
+	users.AddTime = &t
+	db.Create(&users)
 	return users
 }
 

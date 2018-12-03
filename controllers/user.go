@@ -2,6 +2,7 @@ package controllers
 
 import (
 	// "fmt"
+	// "time"
 	"blog/models"
 	"github.com/kataras/iris"
 	"github.com/jinzhu/gorm"
@@ -27,6 +28,13 @@ func (ctr *UserCtr) GetUserById(request iris.Context) {
 	id := request.Params().Get("id")
 	info := userModel.GetUserById(id)
 	request.JSON(info)
+}
+
+func (ctr *UserCtr) AddUser(request iris.Context) {
+	user := &models.Users{}
+	request.ReadJSON(user)
+	newUser := userModel.Create(*user)
+	request.JSON(newUser)
 }
 
 func UserController() *UserCtr {
