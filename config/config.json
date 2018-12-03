@@ -1,0 +1,10 @@
+{
+    "mysql": {
+        "connect": "root:root@/crh?charset=utf8&parseTime=True&loc=Local"
+    },
+    "redis": {
+        "host": "127.0.0.1:6379",
+        "password": "",
+        "db": 0
+    }
+}
