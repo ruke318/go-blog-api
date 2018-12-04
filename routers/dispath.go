@@ -32,6 +32,11 @@ func Dispath(db *gorm.DB) (api *iris.Application) {
 			linkCtr.SetOrm(db)
 			links.Get("/", linkCtr.GetAll)
 		})
+		app.PartyFunc("/posts", func(posts router.Party) {
+			postsCtr := controllers.PostsController()
+			postsCtr.SetOrm(db)
+			posts.Get("/", postsCtr.GetList)
+		})
 	}
 	return
 }

@@ -21,10 +21,9 @@ type Users struct {
  * @Date: 2018-12-03 16:30:36
  * @Desc: 获取所有用户
  */
-func (user *Users) GetAll() Users {
-    users := Users{}
+func (user *Users) GetAll() (users []*Users) {
 	db.Find(&users)
-	return users
+	return
 }
 
 /**

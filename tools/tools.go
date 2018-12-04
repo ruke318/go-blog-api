@@ -1,5 +1,9 @@
 package tools
 
+import (
+	"strconv"
+)
+
 type ApiResponse struct{
 	Code   interface{} `json:"code"`
 	Msg    interface{} `json:"msg"`
@@ -7,10 +11,14 @@ type ApiResponse struct{
 }
 
 const (
+	//code
 	SUCCESS = 10000
 	ERROR = -10000
 	UserNotFound = -10001
 	UserAddFail = -10002
+
+	//默认值
+	DefaultPageSize = 10
 )
 
 func Success(data interface{}, msg ...string) *ApiResponse {
@@ -50,4 +58,13 @@ func Error(msg ...interface{}) *ApiResponse {
 	}
 	ret := &ApiResponse{Code: code, Data: data, Msg: content}
 	return ret
+}
+
+func ParseInt(b string, defInt int) int {
+	id, err := strconv.Atoi(b)
+	if err != nil {
+		return defInt
+	} else {
+		return id
+	}
 }
