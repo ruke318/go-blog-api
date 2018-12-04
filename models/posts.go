@@ -29,6 +29,7 @@ type PostFilter struct {
 	Author int
 	Page int
 	PageSize int
+	Title string
 }
 
 func PostsModel() *Posts {
