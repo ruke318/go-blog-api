@@ -17,10 +17,15 @@ type Redis struct {
 	Db	int			`json:"db"`
 }
 
+type Elastic struct {
+	Url string `json:"url"`
+}
+
 //总配置
 type Config struct {
 	Mysql *Mysql
 	Redis *Redis
+	Elastic *Elastic
 }
 
 /**

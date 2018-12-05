@@ -5,8 +5,9 @@ import "github.com/kataras/iris/core/router"
 import "blog/controllers"
 import "github.com/jinzhu/gorm"
 import "github.com/iris-contrib/middleware/cors"
+import "github.com/olivere/elastic"
 
-func Dispath(db *gorm.DB) (api *iris.Application) {
+func Dispath(db *gorm.DB, esClient *elastic.Client) (api *iris.Application) {
 	api = iris.New()
 	api.Get("/", func(ctx iris.Context) {
 		ctx.WriteString("index")
@@ -20,7 +21,7 @@ func Dispath(db *gorm.DB) (api *iris.Application) {
 	})
 	app := api.Party("/", crs).AllowMethods(iris.MethodOptions) 
 	{	
-		controllers.SetOrm(db)
+		controllers.SetOrm(db, esClient)
 		app.PartyFunc("/user", func(users router.Party) {
 			userCtr := controllers.UserController()
 			users.Get("/", userCtr.GetAll)
@@ -34,6 +35,7 @@ func Dispath(db *gorm.DB) (api *iris.Application) {
 		app.PartyFunc("/posts", func(posts router.Party) {
 			postsCtr := controllers.PostsController()
 			posts.Get("/", postsCtr.GetList)
+			posts.Post("/", postsCtr.AddPosts)
 		})
 		app.PartyFunc("/nav", func(nav router.Party) {
 			navCtr := controllers.NavController()

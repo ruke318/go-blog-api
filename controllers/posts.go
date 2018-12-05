@@ -35,6 +35,12 @@ func (ctr *PostsCtr) GetList(request iris.Context) {
 	request.JSON(tools.Success(data))
 }
 
+func (ctr *PostsCtr) AddPosts(request iris.Context) {
+	posts := models.Posts{}
+	request.ReadJSON(&posts)
+	postsModel.Create(posts)
+}
+
 func PostsController() *PostsCtr {
 	return new(PostsCtr)
 }
