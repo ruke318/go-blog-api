@@ -35,6 +35,11 @@ func Dispath(db *gorm.DB) (api *iris.Application) {
 			postsCtr := controllers.PostsController()
 			posts.Get("/", postsCtr.GetList)
 		})
+		app.PartyFunc("/nav", func(nav router.Party) {
+			navCtr := controllers.NavController()
+			nav.Get("/", navCtr.GetNav)
+			nav.Post("/", navCtr.AddNav)
+		})
 	}
 	return
 }
