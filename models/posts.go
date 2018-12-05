@@ -11,7 +11,7 @@ type Posts struct {
 	Content string `gorm:"type:text" json:"content"`
 	Desc string `gorm:"type:text" json:"desc"`
 	AddTime time.Time `gorm:"column:addTime" json:"addTime"`
-	Author int `json:"Author"`
+	Author int `json:"author"`
 	Tags string `json:"tags"`
 	Imgs string `json:"imgs"`
 	View uint `json:"view"`
