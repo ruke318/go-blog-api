@@ -21,7 +21,3 @@ func (user *Links) GetAll() Links {
 	db.Find(&links)
 	return links
 }
-
-func LinkModel() *Links {
-	return new(Links)
-}

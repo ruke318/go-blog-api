@@ -13,7 +13,7 @@ import (
 type LinkCtr struct {}
 
 var (
-	linkModel = models.LinkModel()
+	linkModel *models.Links
 )
 
 /**

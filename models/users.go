@@ -43,7 +43,3 @@ func (user *Users) Create(users Users) Users {
 	db.Create(&users)
 	return users
 }
-
-func UserModel() *Users {
-	return new(Users)
-}

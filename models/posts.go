@@ -32,10 +32,6 @@ type PostFilter struct {
 	Title string
 }
 
-func PostsModel() *Posts {
-	return new(Posts)
-}
-
 /**
  * @Author: ruke
  * @Date: 2018-12-04 15:45:51
