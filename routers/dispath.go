@@ -13,7 +13,7 @@ func Dispath(db *gorm.DB, esClient *elastic.Client) (api *iris.Application) {
 		ctx.WriteString("index")
 	})
 	crs := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"}, // allows everything, use that to change the hosts.
+		AllowedOrigins:   []string{"*"}, // allows everything, use that to change the hosts. 
 		AllowedMethods:   []string{"PUT", "PATCH", "GET", "POST", "OPTIONS", "DELETE"},
 		AllowedHeaders:   []string{"*"},
 		ExposedHeaders:   []string{"Accept", "Content-Type", "Content-Length", "Accept-Encoding", "Authorization"},
