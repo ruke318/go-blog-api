@@ -23,4 +23,5 @@ func main () {
 	app := routers.Dispath(db)
 	// 启动服务
 	app.Run(iris.Addr(":8002"))
+	defer db.Close()
 }
