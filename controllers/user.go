@@ -6,7 +6,6 @@ import (
 	"blog/models"
 	"blog/tools"
 	"github.com/kataras/iris"
-	"github.com/jinzhu/gorm"
 )
 
 type UserCtr struct {}
@@ -14,16 +13,6 @@ type UserCtr struct {}
 var (
 	userModel *models.Users
 )
-
-/**
- * @Author: ruke
- * @Date: 2018-12-04 10:14:29
- * @Desc: 设置db
- */
-func (ctr *UserCtr) SetOrm(Db *gorm.DB) {
-	models.SetOrm(Db)
-	userModel = models.UserModel()
-}
 
 /**
  * @Author: ruke

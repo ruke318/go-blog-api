@@ -20,21 +20,19 @@ func Dispath(db *gorm.DB) (api *iris.Application) {
 	})
 	app := api.Party("/", crs).AllowMethods(iris.MethodOptions) 
 	{	
+		controllers.SetOrm(db)
 		app.PartyFunc("/user", func(users router.Party) {
 			userCtr := controllers.UserController()
-			userCtr.SetOrm(db)
 			users.Get("/", userCtr.GetAll)
 			users.Get("/{id: uint}", userCtr.GetUserById)
 			users.Post("/", userCtr.AddUser)
 		})
 		app.PartyFunc("/link", func(links router.Party) {
 			linkCtr := controllers.LinkController()
-			linkCtr.SetOrm(db)
 			links.Get("/", linkCtr.GetAll)
 		})
 		app.PartyFunc("/posts", func(posts router.Party) {
 			postsCtr := controllers.PostsController()
-			postsCtr.SetOrm(db)
 			posts.Get("/", postsCtr.GetList)
 		})
 	}

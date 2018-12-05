@@ -9,7 +9,6 @@ import (
 	// "fmt"
 	"blog/models"
 	"blog/tools"
-	"github.com/jinzhu/gorm"
 	"github.com/kataras/iris"
 )
 
@@ -18,16 +17,6 @@ type PostsCtr struct {}
 var (
 	postsModel *models.Posts
 )
-
-/**
- * @Author: ruke
- * @Date: 2018-12-04 10:14:29
- * @Desc: 设置db
- */
-func (ctr *PostsCtr) SetOrm(Db *gorm.DB) {
-	models.SetOrm(Db)
-	postsModel = models.PostsModel()
-}
 
 /**
  * @Author: ruke
