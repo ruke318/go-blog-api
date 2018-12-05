@@ -26,7 +26,7 @@ func main () {
 	if err != nil {
 		tools.Error("连接es失败")
 	}
-	// 加载路由, 将db也作为参数传递
+	// 加载路由, 将db也作为参数传递 
 	app := routers.Dispath(db, esClient)
 	// 启动服务
 	app.Run(iris.Addr(":8002"))
