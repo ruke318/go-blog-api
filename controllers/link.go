@@ -19,7 +19,7 @@ var (
 /**
  * @Author: ruke
  * @Date: 2018-12-03 15:10:09
- * @Desc: 获取所有链接
+ * @Desc: 获取所有链接 
  */
 func (ctr *LinkCtr) GetAll(request iris.Context) {
 	ret := linkModel.GetAll()
