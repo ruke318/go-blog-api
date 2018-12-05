@@ -169,5 +169,5 @@ func (post *Posts) Create(article Posts) Posts {
 		Id(fmt.Sprint(article.ID)).
 		BodyString(string(jsonStr)).
 		Do(ctx)
-	return article
+	return article 
 }
