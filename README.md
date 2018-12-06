@@ -1,6 +1,6 @@
 ## 技术宅男子API  (go iris框架版本)
 
-详细的操作记录在了 `articles` 目录中, 或者访问 ['我的博客']('http://itruke.com')
+详细的操作记录在了 `articles` 目录中, 或者访问 [我的博客](http://itruke.com)
 
 ### 目录结构
 
