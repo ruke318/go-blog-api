@@ -11,6 +11,7 @@ import (
 	"blog/tools"
 	"github.com/kataras/iris"
 	"strconv"
+	"strings"
 )
 
 type PostsCtr struct {}
@@ -39,7 +40,13 @@ func (ctr *PostsCtr) GetList(request iris.Context) {
 func (ctr *PostsCtr) AddPosts(request iris.Context) {
 	posts := models.Posts{}
 	request.ReadJSON(&posts)
-	postsModel.Create(posts)
+	newPosts := postsModel.Create(posts)
+	if newPosts.ID == 0 {
+		Response = tools.Error("添加失败")
+	} else {
+		Response = tools.Success(newPosts)
+	}
+	request.JSON(Response)
 }
 
 func (ctr *PostsCtr) GetDetail(request iris.Context) {
@@ -51,6 +58,16 @@ func (ctr *PostsCtr) GetDetail(request iris.Context) {
 		Response = tools.Success(detail)
 	}
 	request.JSON(Response)
+}
+
+func (ctr *PostsCtr) Search(request iris.Context) {
+	keyword := request.FormValue("keyword")
+	keyword = strings.Trim(keyword, "")
+	page := tools.ParseInt(request.FormValue("page"), 1)
+	pageSize := tools.ParseInt(request.FormValue("pageSize"), tools.DefaultPageSize)
+	list, total, hasNext, current := postsModel.Search(keyword, page, pageSize)
+	data := PageData{Data: list, Count: int(total), HasNext: hasNext, Current: current}
+	request.JSON(tools.Success(data))
 }
 
 func PostsController() *PostsCtr {

@@ -7,6 +7,7 @@ import (
 	"bytes"
 	"strings"
 	"encoding/json"
+	"github.com/olivere/elastic"
 )
 
 type Posts struct {
@@ -199,4 +200,47 @@ func (post *Posts) Detail(id int) Posts {
 	tagDb.Where("id in (?)", strings.Split(posts.Tags, ",")).Find(&posts.TagInfos)
 	posts.AddTimeStr = posts.AddTime.Format("2006-01-02 15:04:05")
 	return posts
+}
+
+func (post *Posts) Search(keyword string, page int, pageSize int) ([]*PostsEs, int64, bool, int) {
+	offset := (page - 1) * pageSize
+	limit := pageSize
+	ctx := context.Background()
+	esInfo := post.GetEs()
+	query := elastic.NewMultiMatchQuery(keyword).
+        FieldWithBoost("tags", 1).
+        FieldWithBoost("desc", 2).
+        FieldWithBoost("content", 4).
+        FieldWithBoost("title", 4)
+    highlight := elastic.NewHighlight().
+        Field("content").
+        Field("title").
+		Field("desc").
+		Field("tags")
+	list, err := esClient.Search().
+		Index(esInfo.Index).
+		Type(esInfo.Type).
+		Query(query).
+        Highlight(highlight).
+        From(int(offset)).
+        Size(int(limit)).
+		Do(ctx)
+	if err != nil {
+		return []*PostsEs{}, 0, false, 1
+	}
+	if list.Hits == nil {
+        return []*PostsEs{}, 0, false, 1
+	}
+	total := list.TotalHits()
+	hasNext := total > int64(page * pageSize)
+	noteList := make([]*PostsEs, 0, len(list.Hits.Hits))
+	for _, hit := range list.Hits.Hits {
+        note := PostsEs{}
+        err := json.Unmarshal(*hit.Source, &note)
+        if err != nil {
+            return []*PostsEs{}, 0, false, 1
+        }
+        noteList = append(noteList, &note)
+    }
+	return noteList, total, hasNext, page
 }
