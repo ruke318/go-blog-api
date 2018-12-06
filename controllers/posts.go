@@ -10,6 +10,7 @@ import (
 	"blog/models"
 	"blog/tools"
 	"github.com/kataras/iris"
+	"strconv"
 )
 
 type PostsCtr struct {}
@@ -39,6 +40,17 @@ func (ctr *PostsCtr) AddPosts(request iris.Context) {
 	posts := models.Posts{}
 	request.ReadJSON(&posts)
 	postsModel.Create(posts)
+}
+
+func (ctr *PostsCtr) GetDetail(request iris.Context) {
+	id, _ := strconv.Atoi(request.Params().Get("id"))
+	detail := postsModel.Detail(id)
+	if detail.ID == 0 {
+		Response = tools.Error("文章不存在")
+	} else {
+		Response = tools.Success(detail)
+	}
+	request.JSON(Response)
 }
 
 func PostsController() *PostsCtr {

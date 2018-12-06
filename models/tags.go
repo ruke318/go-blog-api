@@ -5,5 +5,5 @@ import "time"
 type Tags struct {
 	ID uint `json:"id"`
 	Name string `json:"name"`
-	AddTime time.Time `grom:"column:addTime" json:"addTime"`
+	AddTime time.Time `gorm:"column:addTime;default:now()" json:"addTime"`
 }

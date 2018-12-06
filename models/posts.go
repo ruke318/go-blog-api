@@ -20,6 +20,9 @@ type Posts struct {
 	Imgs string `json:"imgs"`
 	View uint `json:"view"`
 	NavId int `gorm:"column:navId" json:"navId"`
+	AuthorInfo Users `gorm:"ForeignKey:Author;AssociationForeignKey:ID" json:"authorInfo"`
+	NavInfo Nav `gorm:"ForeignKey:NavId;AssociationForeignKey:ID" json:"navInfo"`
+	TagInfos []Tags `gorm:"_" json:"tagsInfo"`
 }
 
 /**
@@ -65,7 +68,17 @@ func (post *Posts) GetAll(filter *PostFilter) ([]*Posts, int, int, bool) {
 		if filter.Page * filter.PageSize < count {
 			hasNext = true
 		}
-		findDb.Where(findPost).Order("addTime desc").Offset(offset).Limit(filter.PageSize).Find(&posts)
+		findDb.Where(findPost).
+			Preload("AuthorInfo").
+			Preload("NavInfo").
+			Order("addTime desc").
+			Offset(offset).
+			Limit(filter.PageSize).
+			Find(&posts)
+	}
+	for _, info := range posts {
+		tagDb := db
+		tagDb.Where("id in (?)", strings.Split(info.Tags, ",")).Find(&info.TagInfos)
 	}
 	return posts, current, count, hasNext
 }
@@ -170,4 +183,17 @@ func (post *Posts) Create(article Posts) Posts {
 		BodyString(string(jsonStr)).
 		Do(ctx)
 	return article 
+}
+
+/**
+ * @Author: ruke
+ * @Date: 2018-12-06 11:51:04
+ * @Desc: 查询详情
+ */
+func (post *Posts) Detail(id int) Posts {
+	posts := Posts{}
+	db.Preload("AuthorInfo").Preload("NavInfo").First(&posts, id)
+	tagDb := db
+	tagDb.Where("id in (?)", strings.Split(posts.Tags, ",")).Find(&posts.TagInfos)
+	return posts
 }
