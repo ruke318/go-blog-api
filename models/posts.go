@@ -202,6 +202,11 @@ func (post *Posts) Detail(id int) Posts {
 	return posts
 }
 
+/**
+ * @Author: ruke
+ * @Date: 2018-12-06 15:37:53
+ * @Desc: 从es搜索文章
+ */
 func (post *Posts) Search(keyword string, page int, pageSize int) ([]*PostsEs, int64, bool, int) {
 	offset := (page - 1) * pageSize
 	limit := pageSize

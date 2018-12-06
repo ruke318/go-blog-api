@@ -12,6 +12,7 @@ import (
 	"github.com/go-redis/redis"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/olivere/elastic"
 )
 
 /**
@@ -36,6 +37,19 @@ func ConnectRedis(conf *config.Redis) *redis.Client {
 	})
 
 	return rd
+}
+
+/**
+ * @Author: ruke
+ * @Date: 2018-12-06 16:38:17
+ * @Desc: 链接es
+ */
+func ConectElastic(conf *config.Elastic) *elastic.Client {
+	esClient, err := elastic.NewClient(elastic.SetURL(conf.Url))
+	if err != nil {
+		panic(fmt.Sprintf("es 链接失败 err=%+v", err))
+	}
+	return esClient
 }
 
 func Connect(driver string, conf string) *gorm.DB {

@@ -37,6 +37,11 @@ func (ctr *PostsCtr) GetList(request iris.Context) {
 	request.JSON(tools.Success(data))
 }
 
+/**
+ * @Author: ruke
+ * @Date: 2018-12-06 15:38:33
+ * @Desc: 添加文章详情
+ */
 func (ctr *PostsCtr) AddPosts(request iris.Context) {
 	posts := models.Posts{}
 	request.ReadJSON(&posts)
@@ -49,6 +54,11 @@ func (ctr *PostsCtr) AddPosts(request iris.Context) {
 	request.JSON(Response)
 }
 
+/**
+ * @Author: ruke
+ * @Date: 2018-12-06 15:38:50
+ * @Desc: 查询文章详情
+ */
 func (ctr *PostsCtr) GetDetail(request iris.Context) {
 	id, _ := strconv.Atoi(request.Params().Get("id"))
 	detail := postsModel.Detail(id)
@@ -60,6 +70,11 @@ func (ctr *PostsCtr) GetDetail(request iris.Context) {
 	request.JSON(Response)
 }
 
+/**
+ * @Author: ruke
+ * @Date: 2018-12-06 15:37:33
+ * @Desc: 搜索文章
+ */
 func (ctr *PostsCtr) Search(request iris.Context) {
 	keyword := request.FormValue("keyword")
 	keyword = strings.Trim(keyword, "")

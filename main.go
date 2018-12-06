@@ -5,10 +5,8 @@ import (
 	"blog/routers"
 	"blog/config"
 	"blog/database"
-	"blog/tools"
 	"github.com/jinzhu/gorm"
 	"github.com/kataras/iris"
-	"github.com/olivere/elastic"
 )
 
 var (
@@ -22,10 +20,7 @@ func main () {
 	db = database.ConnectMysql(conf.Mysql)
 	db.SingularTable(true)
 	//连接es
-	esClient, err := elastic.NewClient(elastic.SetURL(conf.Elastic.Url))
-	if err != nil {
-		tools.Error("连接es失败")
-	}
+	esClient := database.ConectElastic(conf.Elastic)
 	// 加载路由, 将db也作为参数传递 
 	app := routers.Dispath(db, esClient)
 	// 启动服务
