@@ -14,6 +14,7 @@ type Users struct {
 	Wxopenid string `json:"wxopenid"`
 	UserResource string `gorm:"column:userResource;default:qq" json:"userResource"`
 	Url string `json:"url"`
+	AddTimeStr string `gorm:"_" json:"addTimeStr"`
 }
 
 /**

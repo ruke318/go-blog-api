@@ -22,7 +22,8 @@ type Posts struct {
 	NavId int `gorm:"column:navId" json:"navId"`
 	AuthorInfo Users `gorm:"ForeignKey:Author;AssociationForeignKey:ID" json:"authorInfo"`
 	NavInfo Nav `gorm:"ForeignKey:NavId;AssociationForeignKey:ID" json:"navInfo"`
-	TagInfos []Tags `gorm:"_" json:"tagsInfo"`
+	TagInfos []Tags `gorm:"-" json:"tagsInfo"`
+	AddTimeStr string `gorm:"-" json:"addTimeStr"`
 }
 
 /**
@@ -79,6 +80,7 @@ func (post *Posts) GetAll(filter *PostFilter) ([]*Posts, int, int, bool) {
 	for _, info := range posts {
 		tagDb := db
 		tagDb.Where("id in (?)", strings.Split(info.Tags, ",")).Find(&info.TagInfos)
+		info.AddTimeStr = info.AddTime.Format("2006-01-02 15:04:05")
 	}
 	return posts, current, count, hasNext
 }
@@ -195,5 +197,6 @@ func (post *Posts) Detail(id int) Posts {
 	db.Preload("AuthorInfo").Preload("NavInfo").First(&posts, id)
 	tagDb := db
 	tagDb.Where("id in (?)", strings.Split(posts.Tags, ",")).Find(&posts.TagInfos)
+	posts.AddTimeStr = posts.AddTime.Format("2006-01-02 15:04:05")
 	return posts
 }
