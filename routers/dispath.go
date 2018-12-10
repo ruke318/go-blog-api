@@ -44,6 +44,10 @@ func Dispath(db *gorm.DB, esClient *elastic.Client) (api *iris.Application) {
 			nav.Get("/", navCtr.GetNav)
 			nav.Post("/", navCtr.AddNav)
 		})
+		app.PartyFunc("/replys", func(reply router.Party) {
+			replysCtr := controllers.ReplysController()
+			reply.Get("/", replysCtr.GetList)
+		})
 	}
 	return
 }
