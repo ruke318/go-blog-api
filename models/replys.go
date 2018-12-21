@@ -15,8 +15,8 @@ type Replys struct {
 	Ip string `json:"ip"`
 	Os string `json:"os"`
 	Tool string `json:"tool"`
-	AddTime time.Time `gorm:"column:addTime" json:"addTime"`
-	Status int `gorm:"type:tinyint" json:"status"`
+	AddTime time.Time `gorm:"column:addTime;default:now()" json:"addTime"`
+	Status int `gorm:"type:tinyint;default:1" json:"status"`
 	Path string `json:"path"`
 	Sub []*Replys `json:"sub" grom:"-"`
 }
@@ -41,4 +41,28 @@ func (replys *Replys)GetList(key string, page int, pageSize int) ([]*Replys, int
 		itemDb.Where("`key` = ?", key).Where("id <> ?", item.ID).Where("path like ? or path like ?", "%," + id, "%,"+ id +",%").Order("path").Find(&item.Sub)
 	}
 	return list, count, page, hasNext
+}
+
+/**
+ * @Author: ruke
+ * @Date: 2018-12-21 14:32:14
+ * @Desc: 添加评论
+ */
+func (replys *Replys) Create(reply Replys) Replys {
+	reply.Level = 0
+	top := Replys{}
+	if reply.Pid != 0 {
+		db.First(&top, reply.Pid)
+		reply.Level = top.Level + 1
+	}
+	db.Create(&reply)
+	if reply.ID != 0 {
+		if reply.Pid != 0 {
+			reply.Path = top.Path + "," + strconv.Itoa(int(reply.ID))
+		} else {
+			reply.Path = "0," + strconv.Itoa(int(reply.ID))
+		}
+		db.Save(&reply)
+	}
+	return reply
 }

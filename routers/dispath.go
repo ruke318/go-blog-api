@@ -47,6 +47,7 @@ func Dispath(db *gorm.DB) (api *iris.Application) {
 		app.PartyFunc("/replys", func(reply router.Party) {
 			replysCtr := controllers.ReplysController()
 			reply.Get("/", replysCtr.GetList)
+			reply.Post("/", replysCtr.AddReply)
 		})
 	}
 	return
