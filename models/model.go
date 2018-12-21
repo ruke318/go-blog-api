@@ -15,7 +15,7 @@ var (
  * @Date: 2018-12-04 10:13:33
  * @Desc: 定义orm
  */
-func SetOrm(Db *gorm.DB, EsClient *elastic.Client) {
+func SetOrm(Db *gorm.DB) {
 	db = Db
-	esClient = EsClient
+	// esClient = EsClient
 }

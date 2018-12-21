@@ -2,9 +2,9 @@ package models
 
 import (
 	"time"
-	"fmt"
+	// "fmt"
 	"context"
-	"bytes"
+	// "bytes"
 	"strings"
 	"encoding/json"
 	"github.com/olivere/elastic"
@@ -163,28 +163,28 @@ type PostsEs struct {
  * @Desc: 创建文件病写入到es
  */
 func (post *Posts) Create(article Posts) Posts {
-	sDb := db
+	// sDb := db
 	db.Create(&article)
 	//存入到es
-	addTime := uint64(article.AddTime.Unix()) * 1000
+	// addTime := uint64(article.AddTime.Unix()) * 1000
 	//查找tags
-	tags := []*Tags{}
-	sDb.Where("id in (?)", strings.Split(article.Tags, ",")).Find(&tags)
-	var buffer bytes.Buffer
-	for _, value := range tags {
-		buffer.WriteString(value.Name)
-		buffer.WriteString(",")
-	}
-	esData := PostsEs{article.ID, article.Title, article.Desc, article.Content, addTime , strings.Trim(buffer.String(), ",")}
-	jsonStr, _ := json.Marshal(esData)
-	esInfo := post.GetEs()
-	ctx := context.Background()
-	esClient.Index().
-		Index(esInfo.Index).
-		Type(esInfo.Type).
-		Id(fmt.Sprint(article.ID)).
-		BodyString(string(jsonStr)).
-		Do(ctx)
+	// tags := []*Tags{}
+	// sDb.Where("id in (?)", strings.Split(article.Tags, ",")).Find(&tags)
+	// var buffer bytes.Buffer
+	// for _, value := range tags {
+	// 	buffer.WriteString(value.Name)
+	// 	buffer.WriteString(",")
+	// }
+	// esData := PostsEs{article.ID, article.Title, article.Desc, article.Content, addTime , strings.Trim(buffer.String(), ",")}
+	// jsonStr, _ := json.Marshal(esData)
+	// esInfo := post.GetEs()
+	// ctx := context.Background()
+	// esClient.Index().
+	// 	Index(esInfo.Index).
+	// 	Type(esInfo.Type).
+	// 	Id(fmt.Sprint(article.ID)).
+	// 	BodyString(string(jsonStr)).
+	// 	Do(ctx)
 	return article 
 }
 

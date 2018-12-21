@@ -20,9 +20,9 @@ func main () {
 	db = database.ConnectMysql(conf.Mysql)
 	db.SingularTable(true)
 	//连接es
-	esClient := database.ConectElastic(conf.Elastic)
+	// esClient := database.ConectElastic(conf.Elastic)
 	// 加载路由, 将db也作为参数传递 
-	app := routers.Dispath(db, esClient)
+	app := routers.Dispath(db)
 	// 启动服务
 	app.Run(iris.Addr(":8002"))
 	//关闭数据库连接

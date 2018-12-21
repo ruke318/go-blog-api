@@ -4,7 +4,7 @@ import (
 	"blog/tools"
 	"blog/models"
 	"github.com/jinzhu/gorm"
-	"github.com/olivere/elastic"
+	// "github.com/olivere/elastic"
 )
 
 // 订单返回参数
@@ -17,6 +17,6 @@ type PageData struct{
 	HasNext bool `json:"hasNext"`
 }
 
-func SetOrm(Db *gorm.DB, EsClient *elastic.Client) {
-	models.SetOrm(Db, EsClient)
+func SetOrm(Db *gorm.DB) {
+	models.SetOrm(Db)
 }
