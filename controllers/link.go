@@ -7,6 +7,7 @@ package controllers
 
 import (
 	"blog/models"
+	"blog/tools"
 	"github.com/kataras/iris"
 )
 
@@ -24,6 +25,18 @@ var (
 func (ctr *LinkCtr) GetAll(request iris.Context) {
 	ret := linkModel.GetAll()
 	request.JSON(ret)
+}
+
+func (ctr *LinkCtr) AddLink(request iris.Context) {
+	link := models.Links{}
+	request.ReadJSON(&link)
+	newLink := linkModel.Create(link)
+	if newLink.ID == 0 {
+		Response = tools.Error("添加失败")
+	} else {
+		Response = tools.Success(newLink)
+	}
+	request.JSON(Response)
 }
 
 func LinkController() *LinkCtr {

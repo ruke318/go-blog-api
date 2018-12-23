@@ -49,6 +49,7 @@ func (ctr *ReplysCtr) AddReply(request iris.Context) {
 	} else {
 		Response = tools.Success(newReply)
 	}
+	request.JSON(Response)
 }
 
 func ReplysController() *ReplysCtr {
