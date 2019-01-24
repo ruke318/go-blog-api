@@ -1,0 +1,33 @@
+.g-container{padding: 0 0.24rem; }
+section{font-size: 0.28rem; }
+section:nth-last-of-type(1){margin-bottom: 0.38rem; }
+section.section1{margin-top: 0.35rem; }
+/* section p{line-height: 0.4rem;text-indent: 2em; } */
+section p{line-height: 0.4rem; }
+section h1{font-weight: bold;line-height: 1;margin: 0.25rem 0 0.15rem 0; }
+section .span1{text-indent: 0;margin-left: 2em; }
+section.section2 p{line-height: 0.5rem;text-indent: 2em;}
+section.section2 li{line-height: 0.5rem;}
+.img89 {
+	display: block;
+	/* width: 6.2rem; */
+	width: 8.2rem;
+}
+
+@media screen and (min-width:750px) { /*当屏幕尺寸大于600px时，应用下面的CSS样式*/
+	.g-container{padding:0 24px; }
+	section{font-size:28px; }
+	section:nth-last-of-type(1){margin-bottom:38px; }
+	section.section1{margin-top: 35px; }
+	/* section p{line-height: 0.4rem;text-indent: 2em; } */
+	section p{line-height:40px; }
+	section h1{font-weight: bold;line-height: 1;margin:25px 0 15px 0; }
+	section .span1{text-indent: 0;margin-left: 2em; }
+	section.section2 p{line-height:50px;text-indent: 2em;}
+	section.section2 li{line-height:50px;}
+	.img89 {
+		display: block;
+		/* width: 6.2rem; */
+		width: 820px;
+	}
+}

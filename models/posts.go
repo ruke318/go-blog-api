@@ -1,30 +1,30 @@
 package models
 
 import (
-	"time"
-	// "fmt"
+	"bytes"
 	"context"
-	// "bytes"
-	"strings"
 	"encoding/json"
+	"fmt"
 	"github.com/olivere/elastic"
+	"strings"
+	"time"
 )
 
 type Posts struct {
-	ID uint `gorm:"primary_key" json:"id"`
-	Title string `json:"title"`
-	Content string `gorm:"type:text" json:"content"`
-	Desc string `gorm:"type:text" json:"desc"`
-	AddTime time.Time `gorm:"column:addTime;default:now()" json:"addTime"`
-	Author int `json:"author"`
-	Tags string `json:"tags"`
-	Imgs string `json:"imgs"`
-	View uint `json:"view"`
-	NavId int `gorm:"column:navId" json:"navId"`
-	AuthorInfo Users `gorm:"ForeignKey:Author;AssociationForeignKey:ID" json:"authorInfo"`
-	NavInfo Nav `gorm:"ForeignKey:NavId;AssociationForeignKey:ID" json:"navInfo"`
-	TagInfos []Tags `gorm:"-" json:"tagsInfo"`
-	AddTimeStr string `gorm:"-" json:"addTimeStr"`
+	ID         uint      `gorm:"primary_key" json:"id"`
+	Title      string    `json:"title"`
+	Content    string    `gorm:"type:text" json:"content"`
+	Desc       string    `gorm:"type:text" json:"desc"`
+	AddTime    time.Time `gorm:"column:addTime;default:now()" json:"addTime"`
+	Author     int       `json:"author"`
+	Tags       string    `json:"tags"`
+	Imgs       string    `json:"imgs"`
+	View       uint      `json:"view"`
+	NavId      int       `gorm:"column:navId" json:"navId"`
+	AuthorInfo Users     `gorm:"ForeignKey:Author;AssociationForeignKey:ID" json:"authorInfo"`
+	NavInfo    Nav       `gorm:"ForeignKey:NavId;AssociationForeignKey:ID" json:"navInfo"`
+	TagInfos   []Tags    `gorm:"-" json:"tagsInfo"`
+	AddTimeStr string    `gorm:"-" json:"addTimeStr"`
 }
 
 /**
@@ -33,12 +33,12 @@ type Posts struct {
  * @Desc: 文章过滤结构
  */
 type PostFilter struct {
-	NavId int
-	TagId int
-	Author int
-	Page int
+	NavId    int
+	TagId    int
+	Author   int
+	Page     int
 	PageSize int
-	Title string
+	Title    string
 }
 
 /**
@@ -67,7 +67,7 @@ func (post *Posts) GetAll(filter *PostFilter) ([]*Posts, int, int, bool) {
 	findDb.Where(findPost).Find(&posts).Count(&count)
 	if filter.Page > 0 {
 		offset := (filter.Page - 1) * filter.PageSize
-		if filter.Page * filter.PageSize < count {
+		if filter.Page*filter.PageSize < count {
 			hasNext = true
 		}
 		findDb.Where(findPost).
@@ -88,7 +88,7 @@ func (post *Posts) GetAll(filter *PostFilter) ([]*Posts, int, int, bool) {
 
 type PostsEsInfo struct {
 	Index string
-	Type string
+	Type  string
 }
 
 func (post *Posts) GetEs() PostsEsInfo {
@@ -144,17 +144,17 @@ func (post *Posts) GetEs() PostsEsInfo {
 			panic(err)
 		}
 	}
-	
+
 	return info
 }
 
 type PostsEs struct {
-	ID uint `json:"id"`
-	Title string `json:"title"`
-	Desc string `json:"desc"`
+	ID      uint   `json:"id"`
+	Title   string `json:"title"`
+	Desc    string `json:"desc"`
 	Content string `json:"content"`
 	AddTime uint64 `json:"addTime"`
-	Tags string `json:"tags"`
+	Tags    string `json:"tags"`
 }
 
 /**
@@ -163,29 +163,29 @@ type PostsEs struct {
  * @Desc: 创建文件病写入到es
  */
 func (post *Posts) Create(article Posts) Posts {
-	// sDb := db
+	sDb := db
 	db.Create(&article)
-	//存入到es
-	// addTime := uint64(article.AddTime.Unix()) * 1000
-	//查找tags
-	// tags := []*Tags{}
-	// sDb.Where("id in (?)", strings.Split(article.Tags, ",")).Find(&tags)
-	// var buffer bytes.Buffer
-	// for _, value := range tags {
-	// 	buffer.WriteString(value.Name)
-	// 	buffer.WriteString(",")
-	// }
-	// esData := PostsEs{article.ID, article.Title, article.Desc, article.Content, addTime , strings.Trim(buffer.String(), ",")}
-	// jsonStr, _ := json.Marshal(esData)
-	// esInfo := post.GetEs()
-	// ctx := context.Background()
-	// esClient.Index().
-	// 	Index(esInfo.Index).
-	// 	Type(esInfo.Type).
-	// 	Id(fmt.Sprint(article.ID)).
-	// 	BodyString(string(jsonStr)).
-	// 	Do(ctx)
-	return article 
+	// 存入到es
+	addTime := uint64(article.AddTime.Unix()) * 1000
+	// 查找tags
+	tags := []*Tags{}
+	sDb.Where("id in (?)", strings.Split(article.Tags, ",")).Find(&tags)
+	var buffer bytes.Buffer
+	for _, value := range tags {
+		buffer.WriteString(value.Name)
+		buffer.WriteString(",")
+	}
+	esData := PostsEs{article.ID, article.Title, article.Desc, article.Content, addTime, strings.Trim(buffer.String(), ",")}
+	jsonStr, _ := json.Marshal(esData)
+	esInfo := post.GetEs()
+	ctx := context.Background()
+	esClient.Index().
+		Index(esInfo.Index).
+		Type(esInfo.Type).
+		Id(fmt.Sprint(article.ID)).
+		BodyString(string(jsonStr)).
+		Do(ctx)
+	return article
 }
 
 /**
@@ -213,39 +213,39 @@ func (post *Posts) Search(keyword string, page int, pageSize int) ([]*PostsEs, i
 	ctx := context.Background()
 	esInfo := post.GetEs()
 	query := elastic.NewMultiMatchQuery(keyword).
-        FieldWithBoost("tags", 1).
-        FieldWithBoost("desc", 2).
-        FieldWithBoost("content", 4).
-        FieldWithBoost("title", 4)
-    highlight := elastic.NewHighlight().
-        Field("content").
-        Field("title").
+		FieldWithBoost("tags", 1).
+		FieldWithBoost("desc", 2).
+		FieldWithBoost("content", 4).
+		FieldWithBoost("title", 4)
+	highlight := elastic.NewHighlight().
+		Field("content").
+		Field("title").
 		Field("desc").
 		Field("tags")
 	list, err := esClient.Search().
 		Index(esInfo.Index).
 		Type(esInfo.Type).
 		Query(query).
-        Highlight(highlight).
-        From(int(offset)).
-        Size(int(limit)).
+		Highlight(highlight).
+		From(int(offset)).
+		Size(int(limit)).
 		Do(ctx)
 	if err != nil {
 		return []*PostsEs{}, 0, false, 1
 	}
 	if list.Hits == nil {
-        return []*PostsEs{}, 0, false, 1
+		return []*PostsEs{}, 0, false, 1
 	}
 	total := list.TotalHits()
-	hasNext := total > int64(page * pageSize)
+	hasNext := total > int64(page*pageSize)
 	noteList := make([]*PostsEs, 0, len(list.Hits.Hits))
 	for _, hit := range list.Hits.Hits {
-        note := PostsEs{}
-        err := json.Unmarshal(*hit.Source, &note)
-        if err != nil {
-            return []*PostsEs{}, 0, false, 1
-        }
-        noteList = append(noteList, &note)
-    }
+		note := PostsEs{}
+		err := json.Unmarshal(*hit.Source, &note)
+		if err != nil {
+			return []*PostsEs{}, 0, false, 1
+		}
+		noteList = append(noteList, &note)
+	}
 	return noteList, total, hasNext, page
 }
