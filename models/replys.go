@@ -18,6 +18,7 @@ type Replys struct {
 	AddTime time.Time `gorm:"column:addTime;default:now()" json:"addTime"`
 	Status int `gorm:"type:tinyint;default:1" json:"status"`
 	Path string `json:"path"`
+	AuthorInfo Users     `gorm:"ForeignKey:UserId;AssociationForeignKey:ID" json:"authorInfo"`
 	Sub []*Replys `json:"sub" grom:"-"`
 }
 
@@ -34,11 +35,11 @@ func (replys *Replys)GetList(key string, page int, pageSize int) ([]*Replys, int
 	newDb := db
 	findDb.Where("`key` = ?", key).Where("pid = ?", 0).Find(&list).Count(&count)
 	hasNext := page * pageSize < count
-	newDb.Where("`key` = ?", key).Where("pid = ?", 0).Order("addTime desc").Offset(offset).Limit(pageSize).Find(&list)
+	newDb.Where("`key` = ?", key).Where("pid = ?", 0).Order("addTime desc").Offset(offset).Limit(pageSize).Preload("AuthorInfo").Find(&list)
 	for _, item := range list {
 		itemDb := db
 		id := strconv.Itoa(int(item.ID))
-		itemDb.Where("`key` = ?", key).Where("id <> ?", item.ID).Where("path like ? or path like ?", "%," + id, "%,"+ id +",%").Order("path").Find(&item.Sub)
+		itemDb.Where("`key` = ?", key).Where("id <> ?", item.ID).Where("path like ? or path like ?", "%," + id, "%,"+ id +",%").Order("path").Preload("AuthorInfo").Find(&item.Sub)
 	}
 	return list, count, page, hasNext
 }
