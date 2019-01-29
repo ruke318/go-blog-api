@@ -1,11 +1,13 @@
 package routers
 
-import "github.com/kataras/iris"
-import "github.com/kataras/iris/core/router"
-import "blog/controllers"
-import "github.com/jinzhu/gorm"
-import "github.com/iris-contrib/middleware/cors"
-import "github.com/olivere/elastic"
+import (
+	"github.com/kataras/iris"
+	"github.com/kataras/iris/core/router"
+	"blog/controllers"
+	"github.com/jinzhu/gorm"
+	"github.com/iris-contrib/middleware/cors"
+	"github.com/olivere/elastic"
+)
 
 func Dispath(db *gorm.DB, esClicent *elastic.Client) (api *iris.Application) {
 	api = iris.New()

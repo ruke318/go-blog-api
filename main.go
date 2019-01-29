@@ -7,6 +7,8 @@ import (
 	"blog/routers"
 	"github.com/jinzhu/gorm"
 	"github.com/kataras/iris"
+
+	"blog/chatroom"
 )
 
 var (
@@ -23,6 +25,10 @@ func main() {
 	esClient := database.ConectElastic(conf.Elastic)
 	// 加载路由, 将db也作为参数传递
 	app := routers.Dispath(db, esClient)
+	//插播chat
+	app.Get("/ws", chatroom.HandleConnections)
+	go chatroom.HandleMessages()
+
 	// 启动服务
 	app.Run(iris.Addr(":8002"))
 	//关闭数据库连接
