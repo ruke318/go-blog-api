@@ -9,5 +9,9 @@
     },
     "elastic": {
         "url": "http://127.0.0.1:9200"
+    },
+    "wxApp": {
+        "appid": "wx113a5df924efae50",
+        "secret": "c31cf3fe1fb113a5586bf8620248e064"
     }
 }

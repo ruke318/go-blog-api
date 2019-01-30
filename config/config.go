@@ -21,11 +21,17 @@ type Elastic struct {
 	Url string `json:"url"`
 }
 
+type WxApp struct {
+	Appid string `json:"appid"`
+	Secret string `json:"secret"`
+}
+
 //总配置 
 type Config struct {
 	Mysql *Mysql
 	Redis *Redis
 	Elastic *Elastic
+	WxApp *WxApp
 }
 
 /**

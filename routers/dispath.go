@@ -52,6 +52,10 @@ func Dispath(db *gorm.DB, esClicent *elastic.Client) (api *iris.Application) {
 			reply.Get("/", replysCtr.GetList)
 			reply.Post("/", replysCtr.AddReply)
 		})
+		app.PartyFunc("/wx", func(wx router.Party) {
+			wxCtr := controllers.WxController()
+			wx.Post("/login/{code: string}", wxCtr.Login)
+		})
 	}
 	return
 }
